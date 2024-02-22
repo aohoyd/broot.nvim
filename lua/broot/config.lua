@@ -16,6 +16,7 @@ M.defaults = {
 
   shell = vim.o.shell,
   shellcmdflag = vim.o.shellcmdflag,
+  shellredir = vim.o.shellredir,
 
   defaul_explore_path = ".",
 

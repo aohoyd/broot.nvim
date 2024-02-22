@@ -97,14 +97,6 @@ function M:mount()
   if self:buf_valid() then
     -- keep existing buffer
     self.buf = self.buf
-  elseif self.opts.file then
-    self.buf = vim.fn.bufadd(self.opts.file)
-    vim.bo[self.buf].readonly = true
-    vim.bo[self.buf].swapfile = false
-    vim.fn.bufload(self.buf)
-    vim.bo[self.buf].modifiable = false
-  elseif self.opts.buf then
-    self.buf = self.opts.buf
   else
     self.buf = vim.api.nvim_create_buf(false, true)
   end

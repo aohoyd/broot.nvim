@@ -42,6 +42,12 @@ local function parse_lines(lines)
   end
 end
 
+local function remove_file(file)
+  if vim.fn.filereadable(file) ~= 0 then
+    os.remove(file)
+  end
+end
+
 -- Opens a floating window
 M.open = function(path)
   path = vim.fn.expand(path)
@@ -49,7 +55,10 @@ M.open = function(path)
     path = Config.options.default_explore_path
   end
 
-  local cmd = { Config.options.shell, Config.options.shellcmdflag, Config.options.broot_command .. " " .. path }
+  local tmp_file = os.tmpname()
+  local broot_command =
+    string.format("%s %s %s %s", Config.options.broot_command, path, Config.options.shellredir, tmp_file)
+  local cmd = { Config.options.shell, Config.options.shellcmdflag, broot_command }
 
   local opts = {
     ft = "broot",
@@ -66,19 +75,21 @@ M.open = function(path)
   local function on_exit(_, e, _)
     if e ~= 0 then
       float:wipe()
+      remove_file(tmp_file)
       return
     end
 
     local lines = {}
-    if float.buf and vim.api.nvim_buf_is_valid(float.buf) then
-      lines = vim.api.nvim_buf_get_lines(float.buf, 0, -1, false)
-    elseif float.session ~= nil and #float.session > 0 then
-      lines = float.session
+    if vim.fn.filereadable(tmp_file) then
+      for line in io.lines(tmp_file) do
+        table.insert(lines, line)
+      end
     end
 
     parse_lines(lines)
 
     float:wipe()
+    remove_file(tmp_file)
   end
 
   local terminal = vim.fn.termopen(cmd, { on_exit = on_exit })
