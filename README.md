@@ -18,7 +18,7 @@ mentioned enter behavior is appended to your defaults!
 Use your favourite vim plugin manager. For instance, with `lazy.vim`:
 
 ```
-{ "aohoyd/broot.nvim", opts = {} }
+{ "aohoyd/broot.nvim", lazy=false, opts = {} }
 ```
 
 Then try `:Broot` in nvim which opens broot in nvim's current working directory in a floating window.
