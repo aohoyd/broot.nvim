@@ -18,7 +18,7 @@ M.defaults = {
   shellcmdflag = vim.o.shellcmdflag,
   shellredir = vim.o.shellredir,
 
-  defaul_explore_path = ".",
+  default_explore_path = "%:p:h",
 
   broot_replace_netrw = 0,
 
@@ -90,7 +90,7 @@ M.setup = function(opts)
   M.options = vim.tbl_deep_extend("keep", opts, M.defaults)
 
   M.options.broot_command =
-    string.format("%s --conf '%s;%s'", M.options.broot_exec, M.options.broot_conf_path, M.options.broot_vim_conf_path)
+      string.format("%s --conf '%s;%s'", M.options.broot_exec, M.options.broot_conf_path, M.options.broot_vim_conf_path)
 
   if M.options.broot_replace_netrw then
     M.hijack_netrw()
